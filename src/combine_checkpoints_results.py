@@ -33,6 +33,10 @@ elif dataset == "BugAID":
     gen_dir = bugaid_gen_dir
     model = "multi" if multi else "javascript"
     bugs_metadata_file = "BugAid.jsonl"
+elif dataset == "bugjs":
+    gen_dir = bugaid_gen_dir
+    model = "multi" if multi else "javascript"
+    bugs_metadata_file = "bugjs.jsonl"
 elif dataset == "Codeflaws":
     gen_dir = codeflaws_gen_dir
     model = "multi" if multi else "c"
