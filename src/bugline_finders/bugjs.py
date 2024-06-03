@@ -152,7 +152,7 @@ def generate_data(bug_hunks: dict[str, list[DiffHunk]]) -> None:
 
     bugjs_gen_dir.mkdir(parents=True, exist_ok=True)
     with (
-        open(bugjs_gen_dir / "BugAid.jsonl", "w") as file,
+        open(bugjs_gen_dir / "BugsJS.jsonl", "w") as file,
         open(bugjs_gen_dir / "rem.txt", "w") as remfile,
         open(bugjs_gen_dir / "add.txt", "w") as addfile,
         open(bugjs_gen_dir / "context.txt", "w") as ctxfile,
