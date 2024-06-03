@@ -16,10 +16,11 @@ from .configs import (
     models_root,
     quixbugs_genjava_dir,
     quixbugs_genpy_dir,
+    bugjs_gen_dir
 )
 
 # Config
-dataset = "QuixBugs-Python"
+dataset = "BugsJS"
 multi = True
 
 
@@ -158,6 +159,11 @@ elif dataset == "Bears":
     model_name = "multi" if multi else "java"
     bugs_metadata_file = "Bears.jsonl"
     prefix = "Java"
+elif dataset == "BugsJS":
+    gen_dir = bugjs_gen_dir
+    model_name = "multi" if multi else "javascript"
+    bugs_metadata_file = "BugsJS.jsonl"
+    prefix = "JavaScript"
 else:
     raise ValueError("Wrong dataset name")
 

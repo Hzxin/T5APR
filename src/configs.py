@@ -59,8 +59,8 @@ bugaid_data_dir: Path = benchmarks_root / "BugAID/data"
 bugaid_gen_dir: Path = generated_assets_root / "BugAID"
 
 # Bugjs configs
-bugjs_data_dir: Path = benchmarks_root / "bugjs"
-bugjs_gen_dir: Path = generated_assets_root / "bugjs"
+bugjs_data_dir: Path = benchmarks_root / "BugsJS"
+bugjs_gen_dir: Path = generated_assets_root / "BugsJS"
 
 results_dir = project_root / "results"
 
