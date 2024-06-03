@@ -58,6 +58,10 @@ manybugs_gen_dir: Path = generated_assets_root / "ManyBugs"
 bugaid_data_dir: Path = benchmarks_root / "BugAID/data"
 bugaid_gen_dir: Path = generated_assets_root / "BugAID"
 
+# Bugjs configs
+bugjs_data_dir: Path = benchmarks_root / "bugjs"
+bugjs_gen_dir: Path = generated_assets_root / "bugjs"
+
 results_dir = project_root / "results"
 
 # Tree-sitter library

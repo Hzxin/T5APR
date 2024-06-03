@@ -7,8 +7,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt install -y \
     python3-venv
 
 WORKDIR /opt
-RUN git clone --recursive-submodules https://github.com/Hzxin/T5APR.git
-RUN ls
+RUN git clone --recurse-submodules https://github.com/Hzxin/T5APR.git
 RUN chmod +x /opt/*
 WORKDIR /opt/T5APR
 

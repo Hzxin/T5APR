@@ -3,6 +3,8 @@
 import csv
 import difflib
 import json
+import argparse
+
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Iterable
@@ -13,7 +15,7 @@ from pygments.token import Comment, String
 from tree_sitter import Language, Parser
 from unidiff import PatchSet
 
-from ..configs import bugaid_data_dir, bugaid_gen_dir, tree_sitter_lib
+from ..configs import tree_sitter_lib, bugjs_gen_dir
 
 Language.build_library(
     str(tree_sitter_lib / "build/my-languages.so"),
@@ -38,7 +40,6 @@ query = JAVASCRIPT_LANGUAGE.query(
 )
 
 javascript_lexer = JavascriptLexer(stripnl=False)
-
 
 @dataclass
 class DiffHunk:
@@ -149,12 +150,12 @@ def generate_data(bug_hunks: dict[str, list[DiffHunk]]) -> None:
         lines_concat = " ".join([line.strip() for line in hunk.splitlines()])
         return lines_concat.strip()
 
-    bugaid_gen_dir.mkdir(parents=True)
+    bugjs_gen_dir.mkdir(parents=True, exist_ok=True)
     with (
-        open(bugaid_gen_dir / "BugAid.jsonl", "w") as file,
-        open(bugaid_gen_dir / "rem.txt", "w") as remfile,
-        open(bugaid_gen_dir / "add.txt", "w") as addfile,
-        open(bugaid_gen_dir / "context.txt", "w") as ctxfile,
+        open(bugjs_gen_dir / "BugAid.jsonl", "w") as file,
+        open(bugjs_gen_dir / "rem.txt", "w") as remfile,
+        open(bugjs_gen_dir / "add.txt", "w") as addfile,
+        open(bugjs_gen_dir / "context.txt", "w") as ctxfile,
     ):
         for program, hunks in bug_hunks.items():
             file.write(json.dumps({program: [asdict(h) for h in hunks]}) + "\n")
@@ -177,18 +178,20 @@ def cleanup(program: str, source: str, target: str) -> tuple[str, str]:
     return source, target
 
 
-def main():
+def main(args):
     bug_hunks: dict[str, list[DiffHunk]] = {}
-    
-    with open(bugaid_data_dir.parent / "metadata.txt", newline="") as metafile:
+    data_dir = args.data_dir
+
+    # metadata here should contains all suspicious buggy program for a 'single' bug
+    with open(data_dir / "metadata.txt", newline="") as metafile:
         reader = csv.reader(metafile)
         bug_ids, file_names = zip(*[row for row in reader])
 
     for bug_id, file_name in zip(bug_ids, file_names):
         hunks: list[DiffHunk] = []
 
-        buggy_file_path = bugaid_data_dir / bug_id / "buggy" / file_name
-        fixed_file_path = bugaid_data_dir / bug_id / "fixed" / file_name
+        buggy_file_path = data_dir  / "buggy" / file_name
+        fixed_file_path = data_dir  / "fixed" / file_name
 
         diff_lines = list(get_diff_lines(bug_id, buggy_file_path, fixed_file_path))
         hunks = process_hunks(diff_lines)
@@ -203,4 +206,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    parser.add_argument('--data_dir', required=True, type=str, help='data directory containing the buggy program info')
+    parser.add_argument('--exp_dir', required=True,type=str, help='experiment directory containing the subject source code')
+    args = parser.parse_args()
+    main(args)
